@@ -61,19 +61,10 @@ generation:
 
 ### 2. プログラムの実行
 
-```python
-from novel_generator.core.novel_generator import NovelGenerator
-from novel_generator.config.settings import load_config
-
-# 設定の読み込み
-config = load_config("config.yaml")
-
-# 生成器の初期化
-generator = NovelGenerator(config)
-
-# 物語の生成
-story = generator.generate_story()
-print(story)
+基本的にmain.pyを実行すれば大丈夫です。
+インストールの作業を行った後
+```sh
+python main.py
 ```
 
 ### 3. カスタマイズ
