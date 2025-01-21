@@ -68,23 +68,6 @@ generation:
 python main.py
 ```
 
-### 3. カスタマイズ
-
-#### 物語の長さ指定
-```python
-story = generator.generate_story(
-    max_sections=15,
-    total_length="短編（1万字程度）"
-)
-```
-
-#### 生成状況の確認
-```python
-status = generator.get_generation_status()
-print(f"生成状況: {status['status']}")
-print(f"進行度: {status['progress']}%")
-```
-
 ## 出力ファイル
 
 生成された物語とログは`output_dir`で指定したディレクトリに出力されます：
@@ -95,28 +78,6 @@ print(f"進行度: {status['progress']}%")
 - `raw_llm_output.log`: LLMとのやり取りログ
 - `thinking_process.txt`: 思考プロセスのログ
 - `generation_log.jsonl`: 構造化されたログデータ
-
-## エラーハンドリング
-
-主なエラーとその対処方法：
-
-1. API Key関連
-```python
-ValueError: Invalid API key
-# -> llm_configのapi_keyを正しく設定してください
-```
-
-2. 設定不足
-```python
-ValueError: 必須の設定 'xxx' が不足しています
-# -> config.yamlの必須項目を確認してください
-```
-
-3. 生成エラー
-```python
-Exception: セクション生成中にエラー
-# -> ログを確認し、エラーの詳細を確認してください
-```
 
 ## 拡張
 
