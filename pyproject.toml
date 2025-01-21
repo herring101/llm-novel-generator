@@ -1,0 +1,12 @@
+[project]
+name = "tmp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-genai>=0.3.0",
+    "google-generativeai>=0.8.3",
+    "openai>=1.58.1",
+    "pyyaml>=6.0.2",
+]
