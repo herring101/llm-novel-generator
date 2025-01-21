@@ -33,6 +33,7 @@ uv sync
 `config.yaml`を作成し、必要な設定を記述します：
 もともと書かれている設定を参考に、必要な項目を追加・変更してください。
 基本的に①`output_dir`、②`api_key`、③`story_setting`、④`generation`の4つの項目を設定設定すれば、物語の生成が可能です。
+API KEYは[ここ](https://aistudio.google.com/app/apikey)から取得してください。1日50リクエストまで無料なので、10万文字分ぐらいであれば無料で生成可能です。
 ```yaml
 # 基本設定
 output_dir: "novel_output" # ①出力ディレクトリ
