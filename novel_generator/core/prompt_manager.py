@@ -1,17 +1,17 @@
 """プロンプト管理を行うメインクラスを提供するモジュール"""
 
-from typing import Dict, Any
 import json
 import logging
 from dataclasses import asdict
+from typing import Any, Dict
 
-from .prompts.templates import TEMPLATES
+from ..models.data_models import StoryBaseSettings, StoryContext
 from .prompts.exceptions import (
-    TemplateNotFoundError,
     RequiredParameterError,
     TemplateFormatError,
+    TemplateNotFoundError,
 )
-from ..models.data_models import StoryContext, StoryBaseSettings
+from .prompts.templates import TEMPLATES
 
 logger = logging.getLogger(__name__)
 
@@ -153,9 +153,9 @@ class PromptManager:
         story_plan_json = json.dumps(current_plan, ensure_ascii=False, indent=2)
 
         # これまでの内容を取得
-        current_content = "\n\n".join([
-            section.content for section in story_context.sections
-        ])
+        current_content = "\n\n".join(
+            [section.content for section in story_context.sections]
+        )
 
         # 現在の文字数を計算
         current_length = sum(len(section.content) for section in story_context.sections)
@@ -178,13 +178,14 @@ class PromptManager:
             "section_number": section_count,
             "current_length": current_length,
             "total_length": story_context.total_length,
-            "plan_adjustments": adjustment_info
+            "plan_adjustments": adjustment_info,
+            "story_setting": story_context.story_setting,
         }
 
         self._validate_required_params(
-            template_name, 
-            params, 
-            ["base_settings", "story_plan", "section_number", "total_length"]
+            template_name,
+            params,
+            ["base_settings", "story_plan", "section_number", "total_length"],
         )
 
         return self._format_template(
@@ -228,7 +229,7 @@ class PromptManager:
                 story_context.current_length / len(story_context.sections)
                 if story_context.sections
                 else 0
-            )
+            ),
         }
         length_info_json = json.dumps(length_info, ensure_ascii=False, indent=2)
 
@@ -238,12 +239,19 @@ class PromptManager:
             "section_count": section_count,
             "current_content": current_content,
             "length_info": length_info_json,
+            "story_setting": story_context.story_setting,
         }
 
         self._validate_required_params(
             template_name,
             params,
-            ["base_settings", "story_plan", "section_count", "current_content", "length_info"]
+            [
+                "base_settings",
+                "story_plan",
+                "section_count",
+                "current_content",
+                "length_info",
+            ],
         )
 
         return self._format_template(
