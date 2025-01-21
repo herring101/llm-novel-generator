@@ -12,6 +12,7 @@ AIを活用した小説生成システム
 - 詳細なログ出力とエラーハンドリング
 
 ## インストール
+uv が必要です。https://docs.astral.sh/uv/getting-started/installation/#standalone-installer
 
 ```bash
 git clone [repository-url]
