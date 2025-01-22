@@ -114,7 +114,7 @@ SECTION_GENERATION_TEMPLATE = """以下の情報に基づいて、物語の次�
 {story_plan}
 
 これまでの内容：
-{current_content}
+{current_content if current_content else "ないので最初の導入を書きましょう。"}
 
 想定の長さ：{total_length}
 現在の文字数：{current_length}文字
