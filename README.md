@@ -15,7 +15,7 @@ AIを活用した小説生成システム
 uv が必要です。https://docs.astral.sh/uv/getting-started/installation/#standalone-installer
 
 ```bash
-git clone [repository-url]
+git clone https://github.com/herring101/llm-novel-generator
 cd novel-generator
 uv sync
 ```
