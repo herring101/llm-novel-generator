@@ -3,6 +3,7 @@
 import json
 import logging
 from dataclasses import asdict
+from datetime import datetime
 from typing import Any, Dict
 
 from ..models.data_models import StoryBaseSettings, StoryContext
@@ -210,11 +211,17 @@ class PromptManager:
 
         # 各要素をJSON形式に変換
         base_settings_json = json.dumps(
-            asdict(story_context.base_settings), ensure_ascii=False, indent=2
+            asdict(story_context.base_settings),
+            ensure_ascii=False,
+            indent=2,
+            cls=DateTimeJSONEncoder,
         )
 
         story_plan_json = json.dumps(
-            asdict(story_context.story_plan), ensure_ascii=False, indent=2
+            asdict(story_context.story_plan),
+            ensure_ascii=False,
+            indent=2,
+            cls=DateTimeJSONEncoder,
         )
 
         # 直近のセクションのサマリーを生成
@@ -310,3 +317,12 @@ class PromptManager:
 
         self.templates[name] = template
         logger.info(f"テンプレート '{name}' を更新しました")
+
+
+class DateTimeJSONEncoder(json.JSONEncoder):
+    """datetimeをJSON変換するためのカスタムエンコーダー"""
+
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)

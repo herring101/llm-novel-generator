@@ -1,20 +1,20 @@
-from typing import Dict, Any
-import logging
-from datetime import datetime
-import os
 import json
+import logging
+import os
+from datetime import datetime
+from typing import Any, Dict
 
+from ..llm.base import BaseLLM
+from ..logging.log_manager import LogManager
 from ..models.data_models import (
-    StoryContext,
     GenerationMetadata,
     StoryBaseSettings,
+    StoryContext,
     StoryPlan,
 )
-from ..logging.log_manager import LogManager
-from .prompt_manager import PromptManager
 from .parser import ResponseParser
+from .prompt_manager import PromptManager
 from .section_manager import SectionManager
-from ..llm.base import BaseLLM
 
 logger = logging.getLogger(__name__)
 
@@ -107,18 +107,18 @@ class StoryManager:
 
     def _append_story(self, section_number: int, content: str) -> None:
         """物語本文の追記"""
-        content_text = self.parser.extract_tag_content(content, "content")
-        if not content_text:
-            content_text = content
-
         with open(self.story_file, "a", encoding="utf-8") as f:
-            f.write(content_text.strip())
+            f.write(content.strip())
             f.write("\n\n")
 
-    def _generate_base_settings(self, story_setting: str, total_length: str) -> StoryBaseSettings:
+    def _generate_base_settings(
+        self, story_setting: str, total_length: str
+    ) -> StoryBaseSettings:
         """基本設定を生成"""
         logger.info("基本設定の生成を開始")
-        prompt = self.prompt_manager.get_base_settings_prompt(story_setting, total_length)
+        prompt = self.prompt_manager.get_base_settings_prompt(
+            story_setting, total_length
+        )
 
         try:
             response = self.llm.generate(prompt)
@@ -183,7 +183,9 @@ class StoryManager:
 
                 # 進捗のログ出力
                 current_length = self.get_current_length()
-                logger.info(f"セクション {section_count} 完了: 現在の文字数 {current_length}文字")
+                logger.info(
+                    f"セクション {section_count} 完了: 現在の文字数 {current_length}文字"
+                )
 
                 # 完了判定
                 if section_data.progress.percentage >= 100:
@@ -225,7 +227,7 @@ class StoryManager:
             story_plan=None,
             sections=[],
             progress=0.0,
-            current_length=0
+            current_length=0,
         )
 
         # 基本設定の生成

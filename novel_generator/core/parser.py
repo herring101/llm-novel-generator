@@ -1,16 +1,17 @@
 # novel_generator/core/parser.py に以下の変更を適用してください
 
+import logging
 import re
-from typing import List, Dict
+from typing import Dict, List
+
 from ..models.data_models import (
     Character,
-    StoryBaseSettings,
-    StorySection,
-    StoryPlan,
     Progress,
     SectionData,
+    StoryBaseSettings,
+    StoryPlan,
+    StorySection,
 )
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,9 @@ class ResponseParser:
 
             if not matches:
                 logger.debug(f"タグ {tag} の内容を抽出できません")
-                logger.debug(f"テキスト内のタグ位置: 開始={text.find(f'<{tag}>')}, 終了={text.find(f'</{tag}>')}")
+                logger.debug(
+                    f"テキスト内のタグ位置: 開始={text.find(f'<{tag}>')}, 終了={text.find(f'</{tag}>')}"
+                )
                 return ""
 
             content = matches[0].group(1).strip()
@@ -48,7 +51,7 @@ class ResponseParser:
         except Exception as e:
             logger.error(f"タグ {tag} の抽出中にエラー: {str(e)}")
             return ""
-            
+
     def extract_content_tag(self, text: str) -> str:
         """コンテントタグの内容を特別な方法で抽出
 
@@ -69,16 +72,16 @@ class ResponseParser:
 
         # 開始位置を見つける
         start_pos = text.find(start_tag) + len(start_tag)
-        
+
         # 以降のテキストを検索
         remaining_text = text[start_pos:]
-        
+
         # 次の '<' を探す（他のタグの開始）
-        next_tag_pos = remaining_text.find('<')
-        
+        next_tag_pos = remaining_text.find("<")
+
         # 明示的な終了タグを探す
-        end_tag_pos = remaining_text.find('</content>')
-        
+        end_tag_pos = remaining_text.find("</content>")
+
         # 終了位置の決定
         if end_tag_pos != -1:
             # 明示的な終了タグが見つかった場合
@@ -89,7 +92,7 @@ class ResponseParser:
         else:
             # どちらも見つからない場合は残りすべて
             content = remaining_text
-        
+
         return content.strip()
 
     def extract_percentage(self, text: str) -> float:
@@ -161,8 +164,8 @@ class ResponseParser:
                 )
                 section = response_text
 
-            # 特別な content 抽出メソッドを使用
-            content = self.extract_content_tag(section)
+            # コンテンツの抽出（ここを修正）
+            content = self.extract_tag_content(section, "content")
             if not content:
                 logger.warning("コンテンツが抽出できません。セクション全体を使用します")
                 content = section
