@@ -175,7 +175,9 @@ class PromptManager:
         params = {
             "base_settings": base_settings_json,
             "story_plan": story_plan_json,
-            "current_content": current_content,
+            "current_content": current_content
+            if current_content
+            else "ないので最初の導入を書きましょう。",
             "current_length": current_length,
             "total_length": story_context.total_length,
             "plan_adjustments": adjustment_info,
