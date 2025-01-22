@@ -95,11 +95,16 @@ class StoryPlan:
 
     def _apply_adjustment(self, adjustment: PlanAdjustment) -> None:
         """調整内容を現在の計画に適用"""
-        # 残りのセクションの目標を調整
-        remaining_sections = len(self.sections)
-        if remaining_sections > 0:
-            for section in self.sections[-remaining_sections:]:
-                section.update_goals(adjustment.future_plans)
+        # 最新のセクションのインデックスを取得
+        current_section_index = len(self.sections) - 1
+
+        # 未来のセクションに対してのみ目標を設定
+        # （最新のセクションは含まない）
+        if current_section_index >= 0:
+            latest_goals = adjustment.future_plans
+
+            # 最新のセクションには現在の調整のみを適用
+            self.sections[current_section_index].set_current_goals(latest_goals)
 
         # 主要な展開ポイントを更新（必要に応じて）
         if adjustment.adjustments:
@@ -110,7 +115,10 @@ class StoryPlan:
         new_points = [
             point.strip() for point in adjustments.split("\n") if point.strip()
         ]
-        self.major_points.extend(new_points)
+        # 既存のポイントは維持しつつ、新しいポイントを追加
+        for point in new_points:
+            if point not in self.major_points:
+                self.major_points.append(point)
 
     def get_latest_adjustment(self) -> Optional[PlanAdjustment]:
         """最新の調整内容を取得"""
@@ -150,9 +158,9 @@ class StorySection:
     goals: str
     adjusted_goals: List[str] = field(default_factory=list)
 
-    def update_goals(self, new_goals: str) -> None:
-        """目標を更新"""
-        self.adjusted_goals.append(new_goals)
+    def set_current_goals(self, new_goals: str) -> None:
+        """現在の目標を設定（上書き）"""
+        self.adjusted_goals = [new_goals] if new_goals else []
 
     def get_current_goals(self) -> str:
         """現在の目標を取得"""

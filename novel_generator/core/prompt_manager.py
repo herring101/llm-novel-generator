@@ -176,7 +176,6 @@ class PromptManager:
             "base_settings": base_settings_json,
             "story_plan": story_plan_json,
             "current_content": current_content,
-            "section_number": section_count,
             "current_length": current_length,
             "total_length": story_context.total_length,
             "plan_adjustments": adjustment_info,
@@ -186,7 +185,7 @@ class PromptManager:
         self._validate_required_params(
             template_name,
             params,
-            ["base_settings", "story_plan", "section_number", "total_length"],
+            ["base_settings", "story_plan", "total_length"],
         )
 
         return self._format_template(
@@ -227,16 +226,13 @@ class PromptManager:
         # 直近のセクションのサマリーを生成
         current_content = self._generate_content_summary(story_context.sections)
 
-        # 文字数情報の追加
+        # 現在の文字数を計算
+        current_length = sum(len(section.content) for section in story_context.sections)
+
+        # 文字数情報を詳細に構築
         length_info = {
-            "current_length": story_context.current_length,
+            "current_length": current_length,
             "total_length_setting": story_context.total_length,
-            "sections_completed": len(story_context.sections),
-            "average_section_length": (
-                story_context.current_length / len(story_context.sections)
-                if story_context.sections
-                else 0
-            ),
         }
         length_info_json = json.dumps(length_info, ensure_ascii=False, indent=2)
 
