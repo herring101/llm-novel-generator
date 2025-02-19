@@ -16,7 +16,7 @@ uv が必要です。https://docs.astral.sh/uv/getting-started/installation/#sta
 
 ```bash
 git clone https://github.com/herring101/llm-novel-generator
-cd novel-generator
+cd llm-novel-generator
 uv sync
 ```
 
